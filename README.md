@@ -4,10 +4,10 @@
     <img src=".github/images/logo.png" alt="Logo" width="160" height="160">
   </a>
 
-  <h3 align="center">Franken-UI Templ</h3>
+  <h3 align="center">Franken UI Templ</h3>
 
   <p align="center">
-    A Go Templ port of <a href="https://github.com/sveltecult/franken-ui">Franken-UI</a>
+    A Go Templ port of <a href="https://github.com/sveltecult/franken-ui">Franken UI</a>
     <br/>
     <br/>
     <a href="https://github.com/yzaimoglu/franken-ui/issues">Report Bug</a>
