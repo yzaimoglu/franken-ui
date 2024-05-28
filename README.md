@@ -31,7 +31,7 @@
 
 ## About The Project
 
-<img src=".github/images/screenshot.png" alt="Screenshot" width="600" height="400">
+<img src=".github/images/screenshot.png" alt="Screenshot">
 
 * Work in Progress
 
