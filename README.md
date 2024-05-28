@@ -33,8 +33,6 @@
 
 <img src=".github/images/screenshot.png" alt="Screenshot">
 
-* Work in Progress
-
 ## Built With
 
 We are using [Go](https://go.dev), [Templ](https://templ.guide/), [Tailwind](https://tailwindcss.com/) and [Franken-UI](https://github.com/sveltecult/franken-ui).
