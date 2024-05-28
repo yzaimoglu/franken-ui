@@ -1,0 +1,95 @@
+package franken
+
+import "fmt"
+
+type CardData struct {
+	Title  templ.Component
+	Header templ.Component
+	Body   templ.Component
+	Footer templ.Component
+	Color  FrankenColor
+	Class  []string
+}
+
+templ Card(data CardData) {
+	<div
+		class={ templ.Classes(map[string]bool{
+			"uk-card": true,
+			fmt.Sprint("uk-card-"+data.Color): data.Color.Isset(),
+		}, data.Class) }
+	>
+		if data.Header != NoComponent() {
+			<div class="uk-card-header">
+				if data.Title != NoComponent() {
+					<h3 class="uk-card-title">
+						@data.Title
+					</h3>
+				}
+				@data.Header
+			</div>
+		} else {
+			if data.Title != NoComponent() {
+				<div class="uk-card-header">
+					<h3 class="uk-card-title">
+						@data.Title
+					</h3>
+				</div>
+			}
+			<div class="uk-card-body">
+				@data.Body
+			</div>
+		}
+		if data.Footer != NoComponent() {
+			<div class="uk-card-footer">
+				@data.Footer
+			</div>
+		}
+	</div>
+}
+
+func CardBuilder() *CardData {
+	return &CardData{
+		Title: NoComponent(),
+		Color: FrankenColorDefault,
+		Body:  NoComponent(),
+	}
+}
+
+func (c *CardData) SetTitle(title templ.Component) *CardData {
+	c.Title = title
+	return c
+}
+
+func (c *CardData) SetTitleText(title string) *CardData {
+	c.Title = templ.Raw(title)
+	return c
+}
+
+func (c *CardData) SetBody(body templ.Component) *CardData {
+	c.Body = body
+	return c
+}
+
+func (c *CardData) SetHeader(header templ.Component) *CardData {
+	c.Header = header
+	return c
+}
+
+func (c *CardData) SetFooter(footer templ.Component) *CardData {
+	c.Footer = footer
+	return c
+}
+
+func (c *CardData) SetColor(color FrankenColor) *CardData {
+	c.Color = color
+	return c
+}
+
+func (c *CardData) SetClass(class ...string) *CardData {
+	c.Class = class
+	return c
+}
+
+templ (c CardData) Finish() {
+	@Card(c)
+}

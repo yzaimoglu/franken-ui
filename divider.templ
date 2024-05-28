@@ -1,0 +1,36 @@
+package franken
+
+type DividerType byte
+
+const (
+	DividerTypeHorizontal DividerType = 0
+	DividerTypeVertical   DividerType = 1
+)
+
+type DividerData struct {
+	Type DividerType
+}
+
+templ Divider(data DividerData) {
+	<hr
+		class={ templ.Classes(map[string]bool{
+			"uk-divider-small": data.Type == DividerTypeHorizontal,
+			"uk-divider-vertical": data.Type == DividerTypeVertical,
+		}) }
+	/>
+}
+
+func DividerBuilder() *DividerData {
+	return &DividerData{
+		Type: DividerTypeHorizontal,
+	}
+}
+
+func (d *DividerData) SetType(dType DividerType) *DividerData {
+	d.Type = dType
+	return d
+}
+
+templ (d DividerData) Finish() {
+	@Divider(d)
+}

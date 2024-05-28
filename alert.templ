@@ -1,0 +1,87 @@
+package franken
+
+import "fmt"
+
+type AlertData struct {
+	Title           string
+	Content         templ.Component
+	Color           FrankenColor
+	BackgroundColor TailwindColor
+	Icon            templ.Component
+	Close           bool
+	Class           []string
+}
+
+templ Alert(data AlertData) {
+	<div
+		class={ templ.Classes(map[string]bool{
+			"uk-alert": true,
+			"bg-"+data.BackgroundColor.String(): data.BackgroundColor.Isset(),
+			fmt.Sprintf("uk-alert-%s", string(data.Color)): string(data.Color) != "",
+		}, data.Class) }
+		uk-alert
+	>
+		@data.Icon
+		if data.Close {
+			<a href class="uk-alert-close" uk-close></a>
+		}
+		if data.Title != "" {
+			<div class="uk-alert-title">{ data.Title }</div>
+		}
+		<div class="uk-alert-description">
+			@data.Content
+		</div>
+	</div>
+}
+
+func AlertBuilder() *AlertData {
+	return &AlertData{
+		Content: templ.NopComponent,
+		Color:   FrankenColorPrimary,
+		Icon:    templ.NopComponent,
+	}
+}
+
+func (a *AlertData) SetTitle(title string) *AlertData {
+	a.Title = title
+	return a
+}
+
+func (a *AlertData) SetContent(content templ.Component) *AlertData {
+	a.Content = content
+	return a
+}
+
+func (a *AlertData) SetContentText(content string) *AlertData {
+	a.Content = templ.Raw(content)
+	return a
+}
+
+func (a *AlertData) SetBackgroundColor(colorType TailwindColorType, colorWeight TailwindColorWeight) *AlertData {
+	a.BackgroundColor = NewTailwindColor(colorType, colorWeight)
+	return a
+}
+
+func (a *AlertData) SetColor(color FrankenColor) *AlertData {
+	a.Color = color
+	return a
+}
+
+func (a *AlertData) SetIcon(icon templ.Component) *AlertData {
+	a.Icon = icon
+	return a
+}
+
+func (a *AlertData) SetClose(close bool) *AlertData {
+	a.Close = close
+	return a
+}
+
+func (a *AlertData) SetClass(class ...string) *AlertData {
+	a.Class = class
+	return a
+}
+
+templ (a AlertData) Finish() {
+	@Alert(a)
+}

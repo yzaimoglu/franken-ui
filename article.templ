@@ -1,0 +1,55 @@
+package franken
+
+type ArticleData struct {
+	Title   string
+	Meta    templ.Component
+	Content templ.Component
+}
+
+templ Article(data ArticleData) {
+	<article class="uk-article">
+		<h1 class="uk-article-title">
+			{ data.Title }
+		</h1>
+		<p class="uk-article-meta uk-margin">
+			@data.Meta
+		</p>
+		@data.Content
+	</article>
+}
+
+func ArticleBuilder() *ArticleData {
+	return &ArticleData{
+		Content: templ.NopComponent,
+		Meta:    templ.NopComponent,
+	}
+}
+
+func (a *ArticleData) SetTitle(title string) *ArticleData {
+	a.Title = title
+	return a
+}
+
+func (a *ArticleData) SetMeta(meta templ.Component) *ArticleData {
+	a.Meta = meta
+	return a
+}
+
+func (a *ArticleData) SetMetaText(meta string) *ArticleData {
+	a.Meta = templ.Raw(meta)
+	return a
+}
+
+func (a *ArticleData) SetContent(content templ.Component) *ArticleData {
+	a.Content = content
+	return a
+}
+
+func (a *ArticleData) SetContentText(content string) *ArticleData {
+	a.Content = templ.Raw(content)
+	return a
+}
+
+templ (a ArticleData) Finish() {
+	@Article(a)
+}

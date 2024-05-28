@@ -1,0 +1,85 @@
+package franken
+
+type AccordionData struct {
+	Items    []singleAccordionData
+	Multiple bool
+}
+
+type singleAccordionData struct {
+	Title   string
+	Open    bool
+	Content templ.Component
+}
+
+func getOpenClass(open bool) string {
+	if open {
+		return "uk-open"
+	} else {
+		return ""
+	}
+}
+
+func getAccordionAttribute(multiple bool) string {
+	attr := ""
+	if !multiple {
+		attr += "collapsible: true"
+	} else {
+		attr += "multiple: true"
+	}
+	return attr
+}
+
+templ Accordion(data AccordionData) {
+	<ul class="uk-accordion" uk-accordion={ getAccordionAttribute(data.Multiple) }>
+		for _, accordion := range(data.Items) {
+			<li class={ getOpenClass(accordion.Open) }>
+				<a class="uk-accordion-title" href>
+					{ accordion.Title }
+					<span
+						class="uk-accordion-icon"
+						uk-icon="icon: chevron-down; ratio: 0.8"
+					></span>
+				</a>
+				<div class="uk-accordion-content">
+					<p>
+						@accordion.Content
+					</p>
+				</div>
+			</li>
+		}
+	</ul>
+}
+
+func AccordionBuilder() *AccordionData {
+	return &AccordionData{
+		Multiple: false,
+		Items:    make([]singleAccordionData, 0),
+	}
+}
+
+func (a *AccordionData) AddItem(title string, content templ.Component, open bool) *AccordionData {
+	a.Items = append(a.Items, singleAccordionData{
+		Title:   title,
+		Open:    open,
+		Content: content,
+	})
+	return a
+}
+
+func (a *AccordionData) AddItemText(title string, content string, open bool) *AccordionData {
+	a.Items = append(a.Items, singleAccordionData{
+		Title:   title,
+		Open:    open,
+		Content: templ.Raw(content),
+	})
+	return a
+}
+
+func (a *AccordionData) SetMultiple(multiple bool) *AccordionData {
+	a.Multiple = multiple
+	return a
+}
+
+templ (a AccordionData) Finish() {
+	@Accordion(a)
+}

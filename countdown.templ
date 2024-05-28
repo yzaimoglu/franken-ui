@@ -1,0 +1,103 @@
+package franken
+
+import "time"
+import "fmt"
+
+type CountdownData struct {
+	Time      time.Time
+	TextSize  TailwindTextSize
+	Separator string
+	Class     []string
+}
+
+func formatTime(time time.Time) string {
+	formattedTime := time.Format("2006-01-02T15:04:05-07:00")
+	return formattedTime
+}
+
+templ Countdown(data CountdownData) {
+	<div uk-countdown={ fmt.Sprint("date: " + formatTime(data.Time)) }>
+		<span
+			class={ templ.Classes(map[string]bool {
+			"uk-countdown-days": true,
+			"uk-countdown-number": true,
+			fmt.Sprint(data.TextSize): data.TextSize.Isset(),	
+		}) }
+		></span>
+		if data.Separator != "" {
+			<span
+				class={ templ.Classes(map[string]bool {
+					"uk-countdown-separator": true,
+					fmt.Sprint(data.TextSize): data.TextSize.Isset(),	
+				}) }
+			>{ data.Separator }</span>
+		}
+		<span
+			class={ templ.Classes(map[string]bool {
+			"uk-countdown-hours": true,
+			"uk-countdown-number": true,
+			fmt.Sprint(data.TextSize): data.TextSize.Isset(),	
+		}) }
+		></span>
+		if data.Separator != "" {
+			<span
+				class={ templ.Classes(map[string]bool {
+					"uk-countdown-separator": true,
+					fmt.Sprint(data.TextSize): data.TextSize.Isset(),	
+				}) }
+			>{ data.Separator }</span>
+		}
+		<span
+			class={ templ.Classes(map[string]bool {
+			"uk-countdown-minutes": true,
+			"uk-countdown-number": true,
+			fmt.Sprint(data.TextSize): data.TextSize.Isset(),	
+		}) }
+		></span>
+		if data.Separator != "" {
+			<span
+				class={ templ.Classes(map[string]bool {
+					"uk-countdown-separator": true,
+					fmt.Sprint(data.TextSize): data.TextSize.Isset(),	
+				}) }
+			>{ data.Separator }</span>
+		}
+		<span
+			class={ templ.Classes(map[string]bool {
+			"uk-countdown-seconds": true,
+			"uk-countdown-number": true,
+			fmt.Sprint(data.TextSize): data.TextSize.Isset(),	
+		}) }
+		></span>
+	</div>
+}
+
+func CountdownBuilder() *CountdownData {
+	return &CountdownData{
+		Time: time.Now(),
+	}
+}
+
+func (c *CountdownData) SetTime(time time.Time) *CountdownData {
+	c.Time = time
+	return c
+}
+
+func (c *CountdownData) SetSeparator(separator string) *CountdownData {
+	c.Separator = separator
+	return c
+}
+
+func (c *CountdownData) SetTextSize(size TailwindTextSize) *CountdownData {
+	c.TextSize = size
+	return c
+}
+
+func (c *CountdownData) SetClass(class ...string) *CountdownData {
+	c.Class = class
+	return c
+}
+
+templ (c CountdownData) Finish() {
+	@Countdown(c)
+}

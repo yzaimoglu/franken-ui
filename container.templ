@@ -1,0 +1,57 @@
+package franken
+
+import "fmt"
+
+type ContainerSize string
+
+const (
+	ContainerSizeNone   ContainerSize = "none"
+	ContainerSizeXS     ContainerSize = "xsmall"
+	ContainerSizeS      ContainerSize = "xsmall"
+	ContainerSizeL      ContainerSize = "xsmall"
+	ContainerSizeXL     ContainerSize = "xlarge"
+	ContainerSizeExpand ContainerSize = "expand"
+)
+
+type ContainerData struct {
+	Size    ContainerSize
+	Content templ.Component
+	Class   []string
+}
+
+templ Container(data ContainerData) {
+	<div
+		class={ templ.Classes(map[string]bool{
+		"uk-container": true,
+		fmt.Sprint("uk-container-"+data.Size): data.Size != ContainerSizeNone,
+	}), data.Class }
+	>
+		@data.Content
+	</div>
+}
+
+func ContainerBuilder() *ContainerData {
+	return &ContainerData{
+		Size:    ContainerSizeNone,
+		Content: NoComponent(),
+	}
+}
+
+func (c *ContainerData) SetSize(size ContainerSize) *ContainerData {
+	c.Size = size
+	return c
+}
+
+func (c *ContainerData) SetContent(content templ.Component) *ContainerData {
+	c.Content = content
+	return c
+}
+
+func (c *ContainerData) SetClass(class ...string) *ContainerData {
+	c.Class = class
+	return c
+}
+
+templ (c ContainerData) Finish() {
+	@Container(c)
+}

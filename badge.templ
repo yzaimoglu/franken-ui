@@ -1,0 +1,55 @@
+package franken
+
+import "fmt"
+
+type BadgeData struct {
+	Title           templ.Component
+	Color           FrankenColor
+	BackgroundColor TailwindColor
+	Classes         []string
+}
+
+templ Badge(data BadgeData) {
+	<span
+		class={ templ.Classes(map[string]bool{
+		"uk-badge": true,
+		fmt.Sprint("uk-badge-"+data.Color): string(data.Color) != "",
+		fmt.Sprint("bg-"+data.BackgroundColor.String()): data.BackgroundColor.Isset(),
+	}, data.Classes) }
+	>
+		@data.Title
+	</span>
+}
+
+func BadgeBuilder() *BadgeData {
+	return &BadgeData{}
+}
+
+func (b *BadgeData) SetTitle(title templ.Component) *BadgeData {
+	b.Title = title
+	return b
+}
+
+func (b *BadgeData) SetTitleText(title string) *BadgeData {
+	b.Title = templ.Raw(title)
+	return b
+}
+
+func (b *BadgeData) SetColor(color FrankenColor) *BadgeData {
+	b.Color = color
+	return b
+}
+
+func (b *BadgeData) SetBackgroundColor(colorType TailwindColorType, colorWeight TailwindColorWeight) *BadgeData {
+	b.BackgroundColor = NewTailwindColor(colorType, colorWeight)
+	return b
+}
+
+func (b *BadgeData) SetClass(class ...string) *BadgeData {
+	b.Classes = class
+	return b
+}
+
+templ (b BadgeData) Finish() {
+	@Badge(b)
+}

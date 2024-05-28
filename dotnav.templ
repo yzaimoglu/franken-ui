@@ -1,0 +1,75 @@
+package franken
+
+type DotNavigationType byte
+
+const (
+	DotNavigationTypeHorizontal DotNavigationType = 0
+	DotNavigationTypeVertical   DotNavigationType = 1
+)
+
+type DotNavigationData struct {
+	Type  DotNavigationType
+	Items []singleDotNavigationData
+	Class []string
+}
+
+type singleDotNavigationData struct {
+	Title  string
+	Link   string
+	Active bool
+	Class  []string
+}
+
+templ DotNavigation(data DotNavigationData) {
+	<ul
+		class={ templ.Classes(map[string]bool{
+			"uk-dotnav": true,
+			"uk-dotnav-vertical": data.Type == DotNavigationTypeVertical, 
+		}), data.Class }
+	>
+		for _, item := range(data.Items) {
+			<li
+				class={ templ.Classes(map[string]bool{
+					"uk-active": item.Active,
+				}), item.Class }
+			>
+				if item.Link != "" {
+					<a href={ templ.URL(item.Link) }>{ item.Title }</a>
+				} else {
+					{ item.Title }
+				}
+			</li>
+		}
+	</ul>
+}
+
+func DotNavigationBuilder() *DotNavigationData {
+	return &DotNavigationData{
+		Type:  DotNavigationTypeHorizontal,
+		Items: make([]singleDotNavigationData, 0),
+	}
+}
+
+func (d *DotNavigationData) SetType(dType DotNavigationType) *DotNavigationData {
+	d.Type = dType
+	return d
+}
+
+func (d *DotNavigationData) AddItem(title, link string, active bool, class ...string) *DotNavigationData {
+	d.Items = append(d.Items, singleDotNavigationData{
+		Title:  title,
+		Link:   link,
+		Active: active,
+		Class:  class,
+	})
+	return d
+}
+
+func (d *DotNavigationData) SetClass(class ...string) *DotNavigationData {
+	d.Class = class
+	return d
+}
+
+templ (d DotNavigationData) Finish() {
+	@DotNavigation(d)
+}

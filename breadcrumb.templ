@@ -1,0 +1,82 @@
+package franken
+
+type BreadcrumbData struct {
+	Items []breadcrumbSingleData
+	Label string
+	Class []string
+}
+
+type breadcrumbSingleData struct {
+	Text     templ.Component
+	Link     string
+	Disabled bool
+	Current  bool
+	Class    []string
+}
+
+templ Breadcrumb(data BreadcrumbData) {
+	<nav aria-label={ data.Label } class={ data.Class }>
+		<ul class="uk-breadcrumb">
+			for _, item := range(data.Items) {
+				<li
+					class={ templ.Classes(map[string]bool{
+						"uk-disabled": item.Disabled,
+					}, item.Class) }
+				>
+					if item.Current {
+						<span aria-current="page">
+							@item.Text
+						</span>
+					} else {
+						<a href={ templ.URL(item.Link) }>
+							@item.Text
+						</a>
+					}
+				</li>
+			}
+		</ul>
+	</nav>
+}
+
+func BreadcrumbBuilder() *BreadcrumbData {
+	return &BreadcrumbData{
+		Label: "Breadcrumb",
+		Items: make([]breadcrumbSingleData, 0),
+	}
+}
+
+func (b *BreadcrumbData) AddLabel(label string) *BreadcrumbData {
+	b.Label = label
+	return b
+}
+
+func (b *BreadcrumbData) AddItem(text templ.Component, link string, disabled, current bool, class ...string) *BreadcrumbData {
+	b.Items = append(b.Items, breadcrumbSingleData{
+		Text:     text,
+		Link:     link,
+		Disabled: disabled,
+		Current:  current,
+		Class:    class,
+	})
+	return b
+}
+
+func (b *BreadcrumbData) AddItemText(text string, link string, disabled, current bool, class ...string) *BreadcrumbData {
+	b.Items = append(b.Items, breadcrumbSingleData{
+		Text:     templ.Raw(text),
+		Link:     link,
+		Disabled: disabled,
+		Current:  current,
+		Class:    class,
+	})
+	return b
+}
+
+func (b *BreadcrumbData) AddClass(class ...string) *BreadcrumbData {
+	b.Class = class
+	return b
+}
+
+templ (b BreadcrumbData) Finish() {
+	@Breadcrumb(b)
+}
