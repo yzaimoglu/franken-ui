@@ -69,7 +69,7 @@ We appreciate everyone who wants to contribute. In order to do so take a look at
 
 ## License
 
-Distributed under the MIT License. See [LICENSE](https://github.com/yzaimoglu/franken-ui/blob/master/LICENSE) for more information.
+Distributed under the MIT License. See [LICENSE](https://github.com/yzaimoglu/franken-ui/blob/main/LICENSE) for more information.
 
 ## Acknowledgements
 
